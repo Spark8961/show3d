@@ -10,6 +10,6 @@ alter table public.profiles add constraint handle_length check(length(handle) be
 
 alter table public.profiles enable row level security;
 
-create policy "user can create own profile" on public.profiles for insert with check(auth.uid() = user_id)
-create policy "user can view all profiles" on public.profiles for select using(true)
-create policy "user can edit own profile" on public.profiles for update using(auth.uid() = user_id)
+create policy "user can create own profile" on public.profiles for insert with check(auth.uid() = user_id);
+create policy "user can view all profiles" on public.profiles for select using(true);
+create policy "user can edit own profile" on public.profiles for update using(auth.uid() = user_id);
