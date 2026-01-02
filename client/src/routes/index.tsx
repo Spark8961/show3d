@@ -11,6 +11,7 @@ function App() {
             <div className="container">
                 <h1>LANDING PAGE</h1>
                 <button
+                    className="btn btn-primary"
                     onClick={() => {
                         navigate({ to: "/login" });
                     }}
@@ -18,6 +19,7 @@ function App() {
                     Login
                 </button>
                 <button
+                    className="btn btn-primary"
                     onClick={() => {
                         navigate({ to: "/signup" });
                     }}
