@@ -9,10 +9,16 @@ import { routeTree } from "./routeTree.gen";
 
 import "./styles.css";
 import reportWebVitals from "./reportWebVitals.ts";
+import { supabase } from "./queries/auth.ts";
 
 // Create a new router instance
 
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext();
+
+supabase.auth.onAuthStateChange((_event, session) => {
+    TanStackQueryProviderContext.queryClient.setQueryData(["auth"], session?.user ?? null);
+});
+
 const router = createRouter({
     routeTree,
     context: {
