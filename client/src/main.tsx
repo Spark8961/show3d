@@ -15,8 +15,8 @@ import { supabase } from "./queries/auth.ts";
 
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext();
 
-supabase.auth.onAuthStateChange((_event, session) => {
-    TanStackQueryProviderContext.queryClient.setQueryData(["auth"], session?.user ?? null);
+supabase.auth.onAuthStateChange((_event) => {
+    TanStackQueryProviderContext.queryClient.invalidateQueries({ queryKey: ["session"] });
 });
 
 const router = createRouter({

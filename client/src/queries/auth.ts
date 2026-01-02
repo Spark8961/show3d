@@ -7,11 +7,11 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const authQuery = queryOptions({
-    queryKey: ["auth"],
+    queryKey: ["session"],
     queryFn: async () => {
-        const { data, error } = await supabase.auth.getUser();
-        if (error) return null;
-        return data.user;
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        return data.session;
     },
     staleTime: Infinity,
     retry: false,

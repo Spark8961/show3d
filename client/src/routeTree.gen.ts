@@ -9,19 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardRouteRouteImport } from './routes/_onboard/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
-import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as AppHomeRouteImport } from './routes/_app/home'
+import { Route as OnboardAppRouteRouteImport } from './routes/_onboard/_app/route'
+import { Route as AuthSignupRouteRouteImport } from './routes/_auth/signup/route'
+import { Route as OnboardAppProfileRouteImport } from './routes/_onboard/_app/profile'
+import { Route as OnboardAppHomeRouteImport } from './routes/_onboard/_app/home'
+import { Route as AuthSignupCheckEmailRouteImport } from './routes/_auth/signup/check-email'
 
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/_auth',
+const OnboardRouteRoute = OnboardRouteRouteImport.update({
+  id: '/_onboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppRouteRoute = AppRouteRouteImport.update({
-  id: '/_app',
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -29,78 +32,108 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AppHomeRoute = AppHomeRouteImport.update({
+const OnboardAppRouteRoute = OnboardAppRouteRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => OnboardRouteRoute,
+} as any)
+const AuthSignupRouteRoute = AuthSignupRouteRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const OnboardAppProfileRoute = OnboardAppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => OnboardAppRouteRoute,
+} as any)
+const OnboardAppHomeRoute = OnboardAppHomeRouteImport.update({
   id: '/home',
   path: '/home',
-  getParentRoute: () => AppRouteRoute,
+  getParentRoute: () => OnboardAppRouteRoute,
+} as any)
+const AuthSignupCheckEmailRoute = AuthSignupCheckEmailRouteImport.update({
+  id: '/check-email',
+  path: '/check-email',
+  getParentRoute: () => AuthSignupRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/home': typeof AppHomeRoute
+  '/signup': typeof AuthSignupRouteRouteWithChildren
   '/login': typeof AuthLoginRoute
-  '/signup': typeof AuthSignupRoute
+  '/signup/check-email': typeof AuthSignupCheckEmailRoute
+  '/home': typeof OnboardAppHomeRoute
+  '/profile': typeof OnboardAppProfileRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/home': typeof AppHomeRoute
+  '/signup': typeof AuthSignupRouteRouteWithChildren
   '/login': typeof AuthLoginRoute
-  '/signup': typeof AuthSignupRoute
+  '/signup/check-email': typeof AuthSignupCheckEmailRoute
+  '/home': typeof OnboardAppHomeRoute
+  '/profile': typeof OnboardAppProfileRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_app': typeof AppRouteRouteWithChildren
   '/_auth': typeof AuthRouteRouteWithChildren
-  '/_app/home': typeof AppHomeRoute
+  '/_onboard': typeof OnboardRouteRouteWithChildren
+  '/_auth/signup': typeof AuthSignupRouteRouteWithChildren
+  '/_onboard/_app': typeof OnboardAppRouteRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
-  '/_auth/signup': typeof AuthSignupRoute
+  '/_auth/signup/check-email': typeof AuthSignupCheckEmailRoute
+  '/_onboard/_app/home': typeof OnboardAppHomeRoute
+  '/_onboard/_app/profile': typeof OnboardAppProfileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/home' | '/login' | '/signup'
+  fullPaths:
+    | '/'
+    | '/signup'
+    | '/login'
+    | '/signup/check-email'
+    | '/home'
+    | '/profile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/home' | '/login' | '/signup'
+  to: '/' | '/signup' | '/login' | '/signup/check-email' | '/home' | '/profile'
   id:
     | '__root__'
     | '/'
-    | '/_app'
     | '/_auth'
-    | '/_app/home'
-    | '/_auth/login'
+    | '/_onboard'
     | '/_auth/signup'
+    | '/_onboard/_app'
+    | '/_auth/login'
+    | '/_auth/signup/check-email'
+    | '/_onboard/_app/home'
+    | '/_onboard/_app/profile'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  OnboardRouteRoute: typeof OnboardRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_onboard': {
+      id: '/_onboard'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof OnboardRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth': {
       id: '/_auth'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_app': {
-      id: '/_app'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -110,13 +143,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/signup': {
-      id: '/_auth/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
     '/_auth/login': {
       id: '/_auth/login'
       path: '/login'
@@ -124,46 +150,100 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_app/home': {
-      id: '/_app/home'
+    '/_onboard/_app': {
+      id: '/_onboard/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof OnboardAppRouteRouteImport
+      parentRoute: typeof OnboardRouteRoute
+    }
+    '/_auth/signup': {
+      id: '/_auth/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof AuthSignupRouteRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_onboard/_app/profile': {
+      id: '/_onboard/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof OnboardAppProfileRouteImport
+      parentRoute: typeof OnboardAppRouteRoute
+    }
+    '/_onboard/_app/home': {
+      id: '/_onboard/_app/home'
       path: '/home'
       fullPath: '/home'
-      preLoaderRoute: typeof AppHomeRouteImport
-      parentRoute: typeof AppRouteRoute
+      preLoaderRoute: typeof OnboardAppHomeRouteImport
+      parentRoute: typeof OnboardAppRouteRoute
+    }
+    '/_auth/signup/check-email': {
+      id: '/_auth/signup/check-email'
+      path: '/check-email'
+      fullPath: '/signup/check-email'
+      preLoaderRoute: typeof AuthSignupCheckEmailRouteImport
+      parentRoute: typeof AuthSignupRouteRoute
     }
   }
 }
 
-interface AppRouteRouteChildren {
-  AppHomeRoute: typeof AppHomeRoute
+interface AuthSignupRouteRouteChildren {
+  AuthSignupCheckEmailRoute: typeof AuthSignupCheckEmailRoute
 }
 
-const AppRouteRouteChildren: AppRouteRouteChildren = {
-  AppHomeRoute: AppHomeRoute,
+const AuthSignupRouteRouteChildren: AuthSignupRouteRouteChildren = {
+  AuthSignupCheckEmailRoute: AuthSignupCheckEmailRoute,
 }
 
-const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
-  AppRouteRouteChildren,
+const AuthSignupRouteRouteWithChildren = AuthSignupRouteRoute._addFileChildren(
+  AuthSignupRouteRouteChildren,
 )
 
 interface AuthRouteRouteChildren {
+  AuthSignupRouteRoute: typeof AuthSignupRouteRouteWithChildren
   AuthLoginRoute: typeof AuthLoginRoute
-  AuthSignupRoute: typeof AuthSignupRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthSignupRouteRoute: AuthSignupRouteRouteWithChildren,
   AuthLoginRoute: AuthLoginRoute,
-  AuthSignupRoute: AuthSignupRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface OnboardAppRouteRouteChildren {
+  OnboardAppHomeRoute: typeof OnboardAppHomeRoute
+  OnboardAppProfileRoute: typeof OnboardAppProfileRoute
+}
+
+const OnboardAppRouteRouteChildren: OnboardAppRouteRouteChildren = {
+  OnboardAppHomeRoute: OnboardAppHomeRoute,
+  OnboardAppProfileRoute: OnboardAppProfileRoute,
+}
+
+const OnboardAppRouteRouteWithChildren = OnboardAppRouteRoute._addFileChildren(
+  OnboardAppRouteRouteChildren,
+)
+
+interface OnboardRouteRouteChildren {
+  OnboardAppRouteRoute: typeof OnboardAppRouteRouteWithChildren
+}
+
+const OnboardRouteRouteChildren: OnboardRouteRouteChildren = {
+  OnboardAppRouteRoute: OnboardAppRouteRouteWithChildren,
+}
+
+const OnboardRouteRouteWithChildren = OnboardRouteRoute._addFileChildren(
+  OnboardRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  OnboardRouteRoute: OnboardRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
