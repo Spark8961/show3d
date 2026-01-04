@@ -1,12 +1,14 @@
+import { api } from "@/lib/api";
 import { queryOptions } from "@tanstack/react-query";
 
-export const authQuery = queryOptions({
-    queryKey: ["session"],
-    queryFn: async () => {
-        const { data, error };
-        if (error) throw error;
-        return data.session;
-    },
-    staleTime: Infinity,
-    retry: false,
-});
+export const profileQuery = (uid: string | null) =>
+    queryOptions({
+        queryKey: ["profile", uid],
+        enabled: !!uid,
+        queryFn: async () => {
+            const { data } = await api.get("/profile");
+            return data;
+        },
+        staleTime: 10 * 60 * 1000,
+        refetchOnWindowFocus: false,
+    });

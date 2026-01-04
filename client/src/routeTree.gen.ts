@@ -9,22 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as OnboardRouteRouteImport } from './routes/_onboard/route'
-import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as AuthedRouteRouteImport } from './routes/_authed/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthedCreateProfileRouteImport } from './routes/_authed/create-profile'
+import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
-import { Route as OnboardAppRouteRouteImport } from './routes/_onboard/_app/route'
-import { Route as AuthSignupRouteRouteImport } from './routes/_auth/signup/route'
-import { Route as OnboardAppProfileRouteImport } from './routes/_onboard/_app/profile'
-import { Route as OnboardAppHomeRouteImport } from './routes/_onboard/_app/home'
-import { Route as AuthSignupCheckEmailRouteImport } from './routes/_auth/signup/check-email'
+import { Route as AuthedProfileRouteRouteImport } from './routes/_authed/_profile/route'
+import { Route as AuthedProfileProfileRouteImport } from './routes/_authed/_profile/profile'
+import { Route as AuthedProfileHomeRouteImport } from './routes/_authed/_profile/home'
 
-const OnboardRouteRoute = OnboardRouteRouteImport.update({
-  id: '/_onboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/_auth',
+const AuthedRouteRoute = AuthedRouteRouteImport.update({
+  id: '/_authed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -32,108 +27,100 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AuthRouteRoute,
+const AuthedCreateProfileRoute = AuthedCreateProfileRouteImport.update({
+  id: '/create-profile',
+  path: '/create-profile',
+  getParentRoute: () => AuthedRouteRoute,
 } as any)
-const OnboardAppRouteRoute = OnboardAppRouteRouteImport.update({
-  id: '/_app',
-  getParentRoute: () => OnboardRouteRoute,
-} as any)
-const AuthSignupRouteRoute = AuthSignupRouteRouteImport.update({
-  id: '/signup',
+const AuthSignupRoute = AuthSignupRouteImport.update({
+  id: '/_auth/signup',
   path: '/signup',
-  getParentRoute: () => AuthRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-const OnboardAppProfileRoute = OnboardAppProfileRouteImport.update({
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/_auth/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthedProfileRouteRoute = AuthedProfileRouteRouteImport.update({
+  id: '/_profile',
+  getParentRoute: () => AuthedRouteRoute,
+} as any)
+const AuthedProfileProfileRoute = AuthedProfileProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => OnboardAppRouteRoute,
+  getParentRoute: () => AuthedProfileRouteRoute,
 } as any)
-const OnboardAppHomeRoute = OnboardAppHomeRouteImport.update({
+const AuthedProfileHomeRoute = AuthedProfileHomeRouteImport.update({
   id: '/home',
   path: '/home',
-  getParentRoute: () => OnboardAppRouteRoute,
-} as any)
-const AuthSignupCheckEmailRoute = AuthSignupCheckEmailRouteImport.update({
-  id: '/check-email',
-  path: '/check-email',
-  getParentRoute: () => AuthSignupRouteRoute,
+  getParentRoute: () => AuthedProfileRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/signup': typeof AuthSignupRouteRouteWithChildren
   '/login': typeof AuthLoginRoute
-  '/signup/check-email': typeof AuthSignupCheckEmailRoute
-  '/home': typeof OnboardAppHomeRoute
-  '/profile': typeof OnboardAppProfileRoute
+  '/signup': typeof AuthSignupRoute
+  '/create-profile': typeof AuthedCreateProfileRoute
+  '/home': typeof AuthedProfileHomeRoute
+  '/profile': typeof AuthedProfileProfileRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/signup': typeof AuthSignupRouteRouteWithChildren
   '/login': typeof AuthLoginRoute
-  '/signup/check-email': typeof AuthSignupCheckEmailRoute
-  '/home': typeof OnboardAppHomeRoute
-  '/profile': typeof OnboardAppProfileRoute
+  '/signup': typeof AuthSignupRoute
+  '/create-profile': typeof AuthedCreateProfileRoute
+  '/home': typeof AuthedProfileHomeRoute
+  '/profile': typeof AuthedProfileProfileRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_auth': typeof AuthRouteRouteWithChildren
-  '/_onboard': typeof OnboardRouteRouteWithChildren
-  '/_auth/signup': typeof AuthSignupRouteRouteWithChildren
-  '/_onboard/_app': typeof OnboardAppRouteRouteWithChildren
+  '/_authed': typeof AuthedRouteRouteWithChildren
+  '/_authed/_profile': typeof AuthedProfileRouteRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
-  '/_auth/signup/check-email': typeof AuthSignupCheckEmailRoute
-  '/_onboard/_app/home': typeof OnboardAppHomeRoute
-  '/_onboard/_app/profile': typeof OnboardAppProfileRoute
+  '/_auth/signup': typeof AuthSignupRoute
+  '/_authed/create-profile': typeof AuthedCreateProfileRoute
+  '/_authed/_profile/home': typeof AuthedProfileHomeRoute
+  '/_authed/_profile/profile': typeof AuthedProfileProfileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/signup'
     | '/login'
-    | '/signup/check-email'
+    | '/signup'
+    | '/create-profile'
     | '/home'
     | '/profile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/signup' | '/login' | '/signup/check-email' | '/home' | '/profile'
+  to: '/' | '/login' | '/signup' | '/create-profile' | '/home' | '/profile'
   id:
     | '__root__'
     | '/'
-    | '/_auth'
-    | '/_onboard'
-    | '/_auth/signup'
-    | '/_onboard/_app'
+    | '/_authed'
+    | '/_authed/_profile'
     | '/_auth/login'
-    | '/_auth/signup/check-email'
-    | '/_onboard/_app/home'
-    | '/_onboard/_app/profile'
+    | '/_auth/signup'
+    | '/_authed/create-profile'
+    | '/_authed/_profile/home'
+    | '/_authed/_profile/profile'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  OnboardRouteRoute: typeof OnboardRouteRouteWithChildren
+  AuthedRouteRoute: typeof AuthedRouteRouteWithChildren
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthSignupRoute: typeof AuthSignupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_onboard': {
-      id: '/_onboard'
+    '/_authed': {
+      id: '/_authed'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof OnboardRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthRouteRouteImport
+      preLoaderRoute: typeof AuthedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -143,107 +130,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/login': {
-      id: '/_auth/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_onboard/_app': {
-      id: '/_onboard/_app'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof OnboardAppRouteRouteImport
-      parentRoute: typeof OnboardRouteRoute
+    '/_authed/create-profile': {
+      id: '/_authed/create-profile'
+      path: '/create-profile'
+      fullPath: '/create-profile'
+      preLoaderRoute: typeof AuthedCreateProfileRouteImport
+      parentRoute: typeof AuthedRouteRoute
     }
     '/_auth/signup': {
       id: '/_auth/signup'
       path: '/signup'
       fullPath: '/signup'
-      preLoaderRoute: typeof AuthSignupRouteRouteImport
-      parentRoute: typeof AuthRouteRoute
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_onboard/_app/profile': {
-      id: '/_onboard/_app/profile'
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authed/_profile': {
+      id: '/_authed/_profile'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthedProfileRouteRouteImport
+      parentRoute: typeof AuthedRouteRoute
+    }
+    '/_authed/_profile/profile': {
+      id: '/_authed/_profile/profile'
       path: '/profile'
       fullPath: '/profile'
-      preLoaderRoute: typeof OnboardAppProfileRouteImport
-      parentRoute: typeof OnboardAppRouteRoute
+      preLoaderRoute: typeof AuthedProfileProfileRouteImport
+      parentRoute: typeof AuthedProfileRouteRoute
     }
-    '/_onboard/_app/home': {
-      id: '/_onboard/_app/home'
+    '/_authed/_profile/home': {
+      id: '/_authed/_profile/home'
       path: '/home'
       fullPath: '/home'
-      preLoaderRoute: typeof OnboardAppHomeRouteImport
-      parentRoute: typeof OnboardAppRouteRoute
-    }
-    '/_auth/signup/check-email': {
-      id: '/_auth/signup/check-email'
-      path: '/check-email'
-      fullPath: '/signup/check-email'
-      preLoaderRoute: typeof AuthSignupCheckEmailRouteImport
-      parentRoute: typeof AuthSignupRouteRoute
+      preLoaderRoute: typeof AuthedProfileHomeRouteImport
+      parentRoute: typeof AuthedProfileRouteRoute
     }
   }
 }
 
-interface AuthSignupRouteRouteChildren {
-  AuthSignupCheckEmailRoute: typeof AuthSignupCheckEmailRoute
+interface AuthedProfileRouteRouteChildren {
+  AuthedProfileHomeRoute: typeof AuthedProfileHomeRoute
+  AuthedProfileProfileRoute: typeof AuthedProfileProfileRoute
 }
 
-const AuthSignupRouteRouteChildren: AuthSignupRouteRouteChildren = {
-  AuthSignupCheckEmailRoute: AuthSignupCheckEmailRoute,
+const AuthedProfileRouteRouteChildren: AuthedProfileRouteRouteChildren = {
+  AuthedProfileHomeRoute: AuthedProfileHomeRoute,
+  AuthedProfileProfileRoute: AuthedProfileProfileRoute,
 }
 
-const AuthSignupRouteRouteWithChildren = AuthSignupRouteRoute._addFileChildren(
-  AuthSignupRouteRouteChildren,
-)
+const AuthedProfileRouteRouteWithChildren =
+  AuthedProfileRouteRoute._addFileChildren(AuthedProfileRouteRouteChildren)
 
-interface AuthRouteRouteChildren {
-  AuthSignupRouteRoute: typeof AuthSignupRouteRouteWithChildren
-  AuthLoginRoute: typeof AuthLoginRoute
+interface AuthedRouteRouteChildren {
+  AuthedProfileRouteRoute: typeof AuthedProfileRouteRouteWithChildren
+  AuthedCreateProfileRoute: typeof AuthedCreateProfileRoute
 }
 
-const AuthRouteRouteChildren: AuthRouteRouteChildren = {
-  AuthSignupRouteRoute: AuthSignupRouteRouteWithChildren,
-  AuthLoginRoute: AuthLoginRoute,
+const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
+  AuthedProfileRouteRoute: AuthedProfileRouteRouteWithChildren,
+  AuthedCreateProfileRoute: AuthedCreateProfileRoute,
 }
 
-const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
-  AuthRouteRouteChildren,
-)
-
-interface OnboardAppRouteRouteChildren {
-  OnboardAppHomeRoute: typeof OnboardAppHomeRoute
-  OnboardAppProfileRoute: typeof OnboardAppProfileRoute
-}
-
-const OnboardAppRouteRouteChildren: OnboardAppRouteRouteChildren = {
-  OnboardAppHomeRoute: OnboardAppHomeRoute,
-  OnboardAppProfileRoute: OnboardAppProfileRoute,
-}
-
-const OnboardAppRouteRouteWithChildren = OnboardAppRouteRoute._addFileChildren(
-  OnboardAppRouteRouteChildren,
-)
-
-interface OnboardRouteRouteChildren {
-  OnboardAppRouteRoute: typeof OnboardAppRouteRouteWithChildren
-}
-
-const OnboardRouteRouteChildren: OnboardRouteRouteChildren = {
-  OnboardAppRouteRoute: OnboardAppRouteRouteWithChildren,
-}
-
-const OnboardRouteRouteWithChildren = OnboardRouteRoute._addFileChildren(
-  OnboardRouteRouteChildren,
+const AuthedRouteRouteWithChildren = AuthedRouteRoute._addFileChildren(
+  AuthedRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRouteRoute: AuthRouteRouteWithChildren,
-  OnboardRouteRoute: OnboardRouteRouteWithChildren,
+  AuthedRouteRoute: AuthedRouteRouteWithChildren,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthSignupRoute: AuthSignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

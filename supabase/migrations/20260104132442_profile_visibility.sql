@@ -1,0 +1,1 @@
+alter table public.profiles add column is_public boolean not null default true;

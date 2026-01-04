@@ -2,32 +2,31 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 
-import * as TanStackQueryProvider from "./integrations/tanstack-query/root-provider.tsx";
-
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 
 import "./styles.css";
 import reportWebVitals from "./reportWebVitals.ts";
-import { supabase } from "./queries/auth.ts";
+import { supabase } from "./queries/session.ts";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 // Create a new router instance
-
-const TanStackQueryProviderContext = TanStackQueryProvider.getContext();
-
-supabase.auth.onAuthStateChange((_event) => {
-    TanStackQueryProviderContext.queryClient.invalidateQueries({ queryKey: ["session"] });
-});
-
 const router = createRouter({
     routeTree,
     context: {
-        ...TanStackQueryProviderContext,
+        queryClient,
     },
     defaultPreload: "intent",
     scrollRestoration: true,
     defaultStructuralSharing: true,
     defaultPreloadStaleTime: 0,
+});
+
+supabase.auth.onAuthStateChange((_event, session) => {
+    queryClient.setQueryData(["session"], session);
+    router.invalidate();
 });
 
 // Register the router instance for type safety
@@ -43,9 +42,9 @@ if (rootElement && !rootElement.innerHTML) {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
         <StrictMode>
-            <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+            <QueryClientProvider client={queryClient}>
                 <RouterProvider router={router} />
-            </TanStackQueryProvider.Provider>
+            </QueryClientProvider>
         </StrictMode>,
     );
 }

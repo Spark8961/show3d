@@ -11,7 +11,12 @@ if (!supabaseUrl || !supabaseKey) {
     throw new Error("Missing Supabase environment variables");
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const serverSupabaseClient = createClient(supabaseUrl, supabaseKey);
+
+const createUserScopedClient = (req) => {
+    const supabase = createClient(supabaseUrl, supabaseKey, { global: { headers: { Authorization: req.headers.authorization } } });
+    return supabase;
+};
 
 const app = express();
 app.use(express.json());
@@ -27,7 +32,7 @@ api.use(async (req, res, next) => {
     }
 
     const token = authHeader.slice("Bearer ".length);
-    const { data, error } = await supabase.auth.getUser(token);
+    const { data, error } = await serverSupabaseClient.auth.getUser(token);
 
     if (error || !data?.user) {
         return res.status(401).json({ error: "Invalid token" });
@@ -38,12 +43,23 @@ api.use(async (req, res, next) => {
 });
 
 api.get("/profile", async (req, res) => {
-    const { data, error } = await supabase.from("profiles").select("*").single();
+    const userScopedClient = createUserScopedClient(req);
+    const { data, error } = await userScopedClient.from("profiles").select("*").maybeSingle();
     if (error) {
         return res.status(500).json({ error: error.message });
     }
 
     return res.json({ profile: data });
+});
+
+api.post("/profile/create", async (req, res) => {
+    const userScopedClient = createUserScopedClient(req);
+    const { displayname, username } = req.body;
+    const { error } = await userScopedClient.from("profiles").insert({ user_id: req.user.id, display_name: displayname, username });
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+    return res.sendStatus(201);
 });
 
 app.use("/api", api);

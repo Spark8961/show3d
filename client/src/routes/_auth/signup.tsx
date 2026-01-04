@@ -1,6 +1,6 @@
-import { supabase } from "@/queries/auth";
+import { supabase } from "@/queries/session";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_auth/signup")({
@@ -8,6 +8,7 @@ export const Route = createFileRoute("/_auth/signup")({
 });
 
 function RouteComponent() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const signupMutation = useMutation({
@@ -17,7 +18,7 @@ function RouteComponent() {
             return data;
         },
         onSuccess: (data) => {
-            if (!data.session) redirect({ to: "/signup/check-email" });
+            if (data.session) navigate({ to: "/create-profile" });
         },
     });
 

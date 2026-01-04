@@ -1,4 +1,4 @@
-import { supabase } from "@/queries/auth";
+import { supabase } from "@/queries/session";
 import axios from "axios";
 
 export const api = axios.create({
