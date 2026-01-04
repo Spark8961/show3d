@@ -24,7 +24,8 @@ const router = createRouter({
     defaultPreloadStaleTime: 0,
 });
 
-supabase.auth.onAuthStateChange((_event, session) => {
+supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "INITIAL_SESSION") return;
     queryClient.setQueryData(["session"], session);
     router.invalidate();
 });
