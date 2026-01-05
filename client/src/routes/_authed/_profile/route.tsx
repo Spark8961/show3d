@@ -1,6 +1,7 @@
+import { Navbar } from "@/components/Navbar";
 import { profileQuery } from "@/queries/profile";
 import { sessionQuery } from "@/queries/session";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authed/_profile")({
     beforeLoad: async ({ context }) => {
@@ -10,4 +11,14 @@ export const Route = createFileRoute("/_authed/_profile")({
         const { profile } = await context.queryClient.ensureQueryData(profileQuery(uid));
         if (profile === null) throw redirect({ to: "/create-profile" });
     },
+    component: ProfileLayout,
 });
+
+function ProfileLayout() {
+    return (
+        <>
+            <Navbar />
+            <Outlet />
+        </>
+    );
+}
