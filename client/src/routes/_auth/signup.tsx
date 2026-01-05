@@ -1,4 +1,4 @@
-import { supabase } from "@/queries/session";
+import { supabase } from "@/lib/supabase";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";

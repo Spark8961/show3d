@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 import { profileQuery } from "@/queries/profile";
 import { sessionQuery } from "@/queries/session";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -16,11 +16,14 @@ function RouteComponent() {
     const queryClient = useQueryClient();
     const createProfileMutation = useMutation({
         mutationFn: async ({ displayname, username }: { displayname: string; username: string }) => {
-            await api.post("/profile/create", { displayname, username });
-        },
-        onSuccess: async () => {
             const session = queryClient.getQueryData(sessionQuery.queryKey)!;
-            await queryClient.refetchQueries(profileQuery(session.user.id));
+            const uid = session.user.id;
+            const { data, error } = await supabase.from("profiles").insert({ user_id: uid, display_name: displayname, username }).select("user_id, display_name, username").single();
+            if (error) throw error;
+            return data;
+        },
+        onSuccess: async (data) => {
+            await queryClient.setQueryData(profileQuery(data.user_id).queryKey, data);
             navigate({ to: "/home" });
         },
     });

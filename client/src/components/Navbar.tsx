@@ -2,7 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { Avatar } from "./Avatar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { profileQuery } from "@/queries/profile";
-import { sessionQuery, supabase } from "@/queries/session";
+import { sessionQuery } from "@/queries/session";
+import { supabase } from "@/lib/supabase";
 
 export const Navbar = () => {
     const queryClient = useQueryClient();

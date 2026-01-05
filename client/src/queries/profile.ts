@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 import { queryOptions } from "@tanstack/react-query";
 
 export const profileQuery = (uid: string | null) =>
@@ -6,7 +6,8 @@ export const profileQuery = (uid: string | null) =>
         queryKey: ["profile", uid],
         enabled: !!uid,
         queryFn: async () => {
-            const { data } = await api.get("/profile");
+            const { data, error } = await supabase.from("profiles").select("*").eq("user_id", uid).maybeSingle();
+            if (error) throw error;
             return data;
         },
         staleTime: 10 * 60 * 1000,

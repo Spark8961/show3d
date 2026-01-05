@@ -1,5 +1,6 @@
+import { supabase } from "@/lib/supabase";
 import { profileQuery } from "@/queries/profile";
-import { sessionQuery, supabase } from "@/queries/session";
+import { sessionQuery } from "@/queries/session";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
