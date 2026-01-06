@@ -1,3 +1,4 @@
+import { ImagePicker } from "@/components/ImagePicker";
 import { supabase } from "@/lib/supabase";
 import { profileQuery } from "@/queries/profile";
 import { sessionQuery } from "@/queries/session";
@@ -32,6 +33,8 @@ function RouteComponent() {
         <div className="container">
             <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
                 <legend className="fieldset-legend">Signup</legend>
+
+                <ImagePicker />
 
                 <label className="label">Display Name</label>
                 <input
