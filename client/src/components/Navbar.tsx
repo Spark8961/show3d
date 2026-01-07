@@ -9,7 +9,7 @@ export const Navbar = () => {
     const queryClient = useQueryClient();
     const session = queryClient.getQueryData(sessionQuery.queryKey)!;
     const uid = session.user.id;
-    const { profile } = queryClient.getQueryData(profileQuery(uid).queryKey)!;
+    const profile = queryClient.getQueryData(profileQuery(uid).queryKey)!;
     const logOutMutation = useMutation({
         mutationFn: async () => {
             await supabase.auth.signOut();

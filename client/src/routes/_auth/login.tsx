@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_auth/login")({
         const session = await context.queryClient.ensureQueryData(sessionQuery);
 
         if (session) {
-            const { profile } = await context.queryClient.ensureQueryData(profileQuery(session?.user.id));
+            const profile = await context.queryClient.ensureQueryData(profileQuery(session?.user.id));
 
             if (!profile) throw redirect({ to: "/create-profile" });
             if (profile) throw redirect({ to: "/home" });
