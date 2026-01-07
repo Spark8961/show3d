@@ -1,16 +1,16 @@
-import { supabase } from "@/lib/supabase";
-import { profileQuery } from "@/queries/profile";
-import { sessionQuery } from "@/queries/session";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { profileQuery } from "@/queries/profile";
+import { sessionQuery } from "@/queries/session";
 
 export const Route = createFileRoute("/_auth/login")({
     beforeLoad: async ({ context }) => {
         const session = await context.queryClient.ensureQueryData(sessionQuery);
 
         if (session) {
-            const profile = await context.queryClient.ensureQueryData(profileQuery(session?.user.id));
+            const profile = await context.queryClient.ensureQueryData(profileQuery(session.user.id));
 
             if (!profile) throw redirect({ to: "/create-profile" });
             if (profile) throw redirect({ to: "/home" });
@@ -23,7 +23,7 @@ function RouteComponent() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const signinMutation = useMutation({
-        mutationFn: async ({ email, password }: { email: string; password: string }) => {
+        mutationFn: async () => {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) throw error;
             return data;
@@ -60,7 +60,7 @@ function RouteComponent() {
                 <button
                     className="btn btn-neutral mt-4"
                     onClick={() => {
-                        signinMutation.mutate({ email, password });
+                        signinMutation.mutate();
                     }}
                     disabled={signinMutation.isPending}
                 >

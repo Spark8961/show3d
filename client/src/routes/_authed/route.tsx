@@ -1,5 +1,5 @@
-import { sessionQuery } from "@/queries/session";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { sessionQuery } from "@/queries/session";
 
 export const Route = createFileRoute("/_authed")({
     beforeLoad: async ({ context }) => {

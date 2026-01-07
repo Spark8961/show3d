@@ -1,7 +1,7 @@
-import { supabase } from "@/lib/supabase";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/_auth/signup")({
     component: RouteComponent,
@@ -12,7 +12,7 @@ function RouteComponent() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const signupMutation = useMutation({
-        mutationFn: async ({ email, password }: { email: string; password: string }) => {
+        mutationFn: async () => {
             const { data, error } = await supabase.auth.signUp({ email, password });
             if (error) throw error;
             return data;
@@ -52,7 +52,7 @@ function RouteComponent() {
                 <button
                     className="btn btn-neutral mt-4"
                     onClick={() => {
-                        signupMutation.mutate({ email, password });
+                        signupMutation.mutate();
                     }}
                     disabled={signupMutation.isPending}
                 >

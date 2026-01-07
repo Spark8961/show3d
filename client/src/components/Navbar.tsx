@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Avatar } from "./Avatar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Avatar } from "./Avatar";
 import { profileQuery } from "@/queries/profile";
 import { sessionQuery } from "@/queries/session";
 import { supabase } from "@/lib/supabase";

@@ -1,7 +1,7 @@
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { profileQuery } from "@/queries/profile";
 import { sessionQuery } from "@/queries/session";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authed/_profile")({
     beforeLoad: async ({ context }) => {

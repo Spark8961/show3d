@@ -1,10 +1,10 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { ImagePicker } from "@/components/ImagePicker";
 import { supabase } from "@/lib/supabase";
 import { profileQuery } from "@/queries/profile";
 import { sessionQuery } from "@/queries/session";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 
 export const Route = createFileRoute("/_authed/create-profile")({
     component: RouteComponent,
@@ -16,7 +16,7 @@ function RouteComponent() {
     const [username, setUsername] = useState("");
     const queryClient = useQueryClient();
     const createProfileMutation = useMutation({
-        mutationFn: async ({ displayname, username }: { displayname: string; username: string }) => {
+        mutationFn: async () => {
             const session = queryClient.getQueryData(sessionQuery.queryKey)!;
             const uid = session.user.id;
             const { data, error } = await supabase.from("profiles").insert({ user_id: uid, display_name: displayname, username }).select("user_id, display_name, username").single();
@@ -61,7 +61,7 @@ function RouteComponent() {
                 <button
                     className="btn btn-neutral mt-4"
                     onClick={() => {
-                        createProfileMutation.mutate({ displayname, username });
+                        createProfileMutation.mutate();
                     }}
                     disabled={createProfileMutation.isPending}
                 >

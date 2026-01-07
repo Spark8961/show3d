@@ -1,5 +1,5 @@
-import { supabase } from "@/lib/supabase";
 import { queryOptions } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 export const profileQuery = (uid: string | null) =>
     queryOptions({
