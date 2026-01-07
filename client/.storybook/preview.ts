@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react-vite";
 import "@/styles.css";
 
 const preview: Preview = {
+    tags: ["autodocs"],
     parameters: {
         controls: {
             matchers: {
@@ -16,6 +17,7 @@ const preview: Preview = {
             // 'off' - skip a11y checks entirely
             test: "todo",
         },
+        layout: "centered",
     },
 };
 

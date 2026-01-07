@@ -12,27 +12,27 @@ type Story = StoryObj<typeof Avatar>;
 
 export const InitialsOnly: Story = {
     args: {
-        username: "Alice",
+        username: "jane",
     },
 };
 
 export const WithImage: Story = {
     args: {
-        username: "Bob",
-        src: "https://i.pravatar.cc/150?img=3",
+        username: "bob",
+        src: "/sample-avatar.png",
     },
 };
 
 export const Large: Story = {
     args: {
-        username: "Charlie",
+        username: "joe",
         size: 64,
     },
 };
 
 export const Small: Story = {
     args: {
-        username: "Dana",
+        username: "charlie",
         size: 24,
     },
 };

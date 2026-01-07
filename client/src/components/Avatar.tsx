@@ -1,4 +1,6 @@
-type AvatarProps = {
+import { useState } from "react";
+
+export type AvatarProps = {
     username: string;
     src?: string | null;
     size?: number;
@@ -18,24 +20,30 @@ function colorFromString(str: string) {
 }
 
 export const Avatar = ({ username, src, size = 32 }: AvatarProps) => {
-    const initials = username.trim().charAt(0).toUpperCase();
+    const [loaded, setLoaded] = useState(false);
+
+    const initial = username.trim().charAt(0).toUpperCase();
     const color = colorFromString(username);
 
     return (
-        <div
+        <span
+            className="relative rounded-full flex items-center justify-center text-white text-sm font-medium overflow-hidden select-none"
             style={{
                 width: size,
                 height: size,
-                backgroundColor: src ? "transparent" : color,
+                backgroundColor: color,
             }}
-            className="
-        rounded-full
-        flex items-center justify-center
-        text-white text-sm font-medium
-        overflow-hidden
-        select-none"
         >
-            {src ? <img src={src} alt={username} className="h-full w-full object-cover" /> : initials}
-        </div>
+            <span
+                style={{
+                    fontSize: Math.round(size * 0.45),
+                }}
+                className="font-medium text-white"
+            >
+                {initial}
+            </span>
+
+            {src && <img src={src} alt={username} onLoad={() => setLoaded(true)} className={`absolute inset-0 h-full w-full object-cover transition-opacity ${loaded ? "opacity-100" : "opacity-0"}`} />}
+        </span>
     );
 };
