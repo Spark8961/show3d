@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { Avatar } from "./Avatar";
 import { profileQuery } from "@/queries/profile";
 import { sessionQuery } from "@/queries/session";
@@ -10,6 +11,26 @@ export const Navbar = () => {
     const session = queryClient.getQueryData(sessionQuery.queryKey)!;
     const uid = session.user.id;
     const profile = queryClient.getQueryData(profileQuery(uid).queryKey)!;
+    const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const loadAvatar = async () => {
+            const { data, error } = await supabase.storage.from("avatars").createSignedUrl(`${uid}.webp`, 60 * 30);
+
+            if (cancelled) return;
+
+            setAvatarSrc(error ? null : data.signedUrl);
+        };
+
+        loadAvatar();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [uid]);
+
     const logOutMutation = useMutation({
         mutationFn: async () => {
             await supabase.auth.signOut();
@@ -29,7 +50,7 @@ export const Navbar = () => {
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                         <div className="w10 rounded-full">
-                            <Avatar username={profile.display_name} src={profile.img_url} />
+                            <Avatar username={profile.display_name} src={avatarSrc} />
                         </div>
                     </div>
                     <ul tabIndex={-1} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">

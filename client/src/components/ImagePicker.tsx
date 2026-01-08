@@ -21,13 +21,32 @@ export const ImagePicker = ({ initialSrc, onChange, avatar }: ImagePickerProps) 
         };
     }, [preview]);
 
-    function handleSelect(file?: File) {
+    const handleSelect = (file?: File) => {
         if (!file) return;
+
+        if (!file.type.startsWith("image/")) return;
+        if (file.size > 2 * 1024 * 1024) return;
+
+        if (preview?.startsWith("blob:")) {
+            URL.revokeObjectURL(preview);
+        }
 
         const url = URL.createObjectURL(file);
         setPreview(url);
         onChange?.(file);
-    }
+
+        if (inputRef.current) {
+            inputRef.current.value = "";
+        }
+    };
+
+    const clear = () => {
+        if (preview?.startsWith("blob:")) {
+            URL.revokeObjectURL(preview);
+        }
+        setPreview(null);
+        onChange?.(null);
+    };
 
     return (
         <>
@@ -35,6 +54,9 @@ export const ImagePicker = ({ initialSrc, onChange, avatar }: ImagePickerProps) 
 
             <button type="button" onClick={() => inputRef.current?.click()} className="inline-block">
                 <Avatar username={avatar.username} src={preview} size={size} />
+            </button>
+            <button type="button" onClick={clear}>
+                Remove
             </button>
         </>
     );
